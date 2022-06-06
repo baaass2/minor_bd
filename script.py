@@ -1,22 +1,35 @@
+import json
+from time import process_time_ns
 import pandas as pd
+
+
+def revisar_dicc(data, titulo, nconst):
+    flag = False
+    for dicc_data in data:
+        if dicc_data['tconst'] == titulo:
+            dicc_data['elenco'].append(nconst)
+            flag = True
+            break
+
+    if flag == False:
+        data.append({'tconst':titulo, 'elenco':[nconst]})
+ 
+
+    return data
 
 personas = pd.read_csv('data/name_basics.tsv', sep='\t', header=0)
 titulos = pd.read_csv('data/title_basics.tsv', sep='\t', header=0)
 
 
-data = {}
-for a in titulos['tconst'][0]:
+data = [{'tconst':'id', 'elenco':[]}]
 
-    for i in personas.itertuples():
-        for titulo in i.knownForTitles:
-            elenco = []
-            if i == titulo:
-                elenco.append(i.nconst)
-        
-    dicc = {'tconst':a, 'elenco':elenco}
-    data.update(dicc)
+for row_personas in personas.itertuples():
+    for titulo in row_personas.knownForTitles.split(','):
+        data = revisar_dicc(data, titulo, row_personas.nconst)
 
-print(data)
+with open('elencos.json', 'w') as file:
+    json.dump(data, file, indent=4)
 
-#print(actores['nconst'])
+
+
 
