@@ -4,7 +4,7 @@ import multiprocessing
 import numpy
 
 
-def main(df):
+def main(titulos):
     array = []
     for row_titulos in titulos.itertuples():
         print(row_titulos.tconst)

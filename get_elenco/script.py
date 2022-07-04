@@ -35,12 +35,9 @@ if __name__ == '__main__':
     personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0)
     #titulos = pd.read_csv('../data/title_basics.tsv', sep='\t', header=0, nrows=1000)
 
-    
-    cores = multiprocessing.cpu_count()
-    personas_split = numpy.array_split(personas, cores)
 
-    with multiprocessing.Pool(cores) as pool:
-        results = pool.map(main, personas_split)
+
+    results = main(personas)
     #print(results)
     list_edges = []
     for i in results:
