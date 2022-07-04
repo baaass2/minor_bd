@@ -4,21 +4,20 @@ import multiprocessing
 import numpy
 
 
-def main(titulos):
-    data = pd.DataFrame(columns=['tconst','genre'])
-
+def main(df):
+    array = []
     for row_titulos in titulos.itertuples():
         print(row_titulos.tconst)
-        for genre in str(row_titulos.genres).split(','):
-            #data = revisar_dicc(data, genre, row_titulos.tconst)
-            data = pd.concat([data, pd.DataFrame.from_records([{'tconst': row_titulos.tconst, 'genre':genre}])])
+        genres = row_titulos.genres.split(',')
+        data = {row_titulos.tconst:genres}
+        array.append(data)
+            #data = pd.concat([data, pd.DataFrame.from_records([{'nconst': row_personas.nconst, 'profession': profession}])])
 
-    return data
-
+    return array
 
 if __name__ == '__main__':
     #personas = pd.read_csv('data/name_basics.tsv', sep='\t', header=0, nrows=100)
-    titulos = pd.read_csv('../data/title_basics.tsv', sep='\t', header=0)
+    titulos = pd.read_csv('../data/title_basics.tsv', sep='\t', header=0, nrows=10)
 
 
     #data = [{'genre':'id', 'titles':[]}]
@@ -28,10 +27,17 @@ if __name__ == '__main__':
 
     with multiprocessing.Pool(cores) as pool:
         results = pool.map(main, titulo_split)
-    #print(results)
-    data = pd.concat(results)
+    
+    results = numpy.concatenate(results)
 
-    data.to_csv(path_or_buf='genres.csv', index=False)
+    list_edges = []
+    for i in results:
+        for key, value in i.items():
+            list_edges.append([key, value])
+
+    df_export = pd.DataFrame(list_edges, columns=['tconst', 'genres'])
+    #df_export= df_export.drop_duplicates()
+    df_export.to_csv("genres.csv", index=False, sep='|')
 
 
 

@@ -6,37 +6,36 @@ from multiprocessing import Pool
 import multiprocessing
 
 
-def revisar_dicc(data, profession, nconst):
-    flag = False
-    for dicc_data in data:
-        if dicc_data['profession'] == profession:
-            dicc_data['names'].append(nconst)
-            flag = True
-            break
+def revisar_dicc(data,  profession, nconst):
+    #for dicc_data in data:
+    for i in  profession:
+        if data.get(nconst, False):
+            data[nconst] = data[nconst].append(profession)
+                 
+        else:
+            data[nconst]=[]
+            data[nconst].append(profession) 
 
-    if flag == False:
-        data.append({'profession':profession, 'names':[nconst]})
- 
 
     return data
 
 
 def main(df):
-    #data = [{'profession':'id', 'names':[]}]
-    data = pd.DataFrame(columns=['nconst','profession'])
+    array = []
     for row_personas in df.itertuples():
         print(row_personas.nconst)
-        for profession in str(row_personas.primaryProfession).split(','):
-            #data = revisar_dicc(data, profession, row_personas.nconst)
-            data = pd.concat([data, pd.DataFrame.from_records([{'nconst': row_personas.nconst, 'profession': profession}])])
+        profession = row_personas.primaryProfession.split(',')
+        data = {row_personas.nconst:profession}
+        array.append(data)
+            #data = pd.concat([data, pd.DataFrame.from_records([{'nconst': row_personas.nconst, 'profession': profession}])])
 
-    return data
+    return array
 
 
 
 if __name__ == '__main__':
 
-    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0)
+    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0, nrows=10)
     #titulos = pd.read_csv('data/title_basics.tsv', sep='\t', header=0, nrows=100000)
 
     cores = multiprocessing.cpu_count()
@@ -44,12 +43,17 @@ if __name__ == '__main__':
 
     with multiprocessing.Pool(cores) as pool:
         results = pool.map(main, personas_split)
-    
-    data = pd.concat(results)
- 
-    data.to_csv(path_or_buf='professions.csv', index=False)
-    #with open('professions.json', 'w') as file:
-        #json.dump(results, file, indent=4)
+
+    results = numpy.concatenate(results)
+
+    list_edges = []
+    for i in results:
+        for key, value in i.items():
+            list_edges.append([key, value])
+
+    df_export = pd.DataFrame(list_edges, columns=['nconst', 'rol'])
+    #df_export= df_export.drop_duplicates()
+    df_export.to_csv("rol.csv", index=False, sep='|')
 
 
 
