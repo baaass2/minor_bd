@@ -30,7 +30,7 @@ def main(personas):
     return data
 if __name__ == '__main__':
 
-    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0, nrows=100)
+    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0)
     #titulos = pd.read_csv('../data/title_basics.tsv', sep='\t', header=0, nrows=1000)
 
     

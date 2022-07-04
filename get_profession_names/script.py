@@ -36,7 +36,7 @@ def main(df):
 
 if __name__ == '__main__':
 
-    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0, nrows=1000)
+    personas = pd.read_csv('../data/name_basics.tsv', sep='\t', header=0)
     #titulos = pd.read_csv('data/title_basics.tsv', sep='\t', header=0, nrows=100000)
 
     cores = multiprocessing.cpu_count()

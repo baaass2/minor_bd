@@ -68,10 +68,9 @@ def get_nodes_genres(titulos):
     return list_edges
 if __name__ == '__main__':
 
-    personas = pd.read_csv('/home/sanzana/Documents/GitHub/data_minorbd/name_basics.tsv', sep='\t', header=0, nrows=1000000, low_memory=False)
-    titulos = pd.read_csv('/home/sanzana/Documents/GitHub/data_minorbd/title_basics.tsv', sep='\t', header=0, nrows=1000000, low_memory=False)
+    personas = pd.read_csv('/home/bass/Documents/GitHub/data_minorbd/name_basics.tsv', sep='\t', header=0, low_memory=False)
+    titulos = pd.read_csv('/home/bass/Documents/GitHub/data_minorbd/title_basics.tsv', sep='\t', header=0, low_memory=False)
 
-    
     cores = multiprocessing.cpu_count()
     personas_split = numpy.array_split(personas, cores)
     titulos_split = numpy.array_split(titulos, cores)
